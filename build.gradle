@@ -70,6 +70,12 @@ dependencies {
     // https://mvnrepository.com/artifact/net.coobird/thumbnailator
     implementation 'net.coobird:thumbnailator:0.4.20'
 
+    // https://mvnrepository.com/artifact/com.lwohvye.log4jdbc-log4j2/log4jdbc-log4j2-jdbc4.1
+    implementation 'com.lwohvye.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.18'
+    //implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
+
+
+
 
 }
 

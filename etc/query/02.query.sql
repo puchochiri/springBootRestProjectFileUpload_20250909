@@ -83,15 +83,35 @@ ALTER DATABASE webdb CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 select * from board order by bno desc;
 
+select * from board_image order by uuid desc;
+
 select * from board order by bno asc;
 
 
-select * from board where bno = 800;
+
+SELECT
+    b1_0.bno,
+    b1_0.content,
+    b1_0.moddate,
+    b1_0.regdate,
+    b1_0.title,
+    b1_0.writer
+FROM
+    from board b1_0
+WHERE
+    b1_0.bno=1
+
+
+select * from board order by bno desc;
 
 select * from reply order by rno desc;
+
+select * from board_image order by board_bno;
 
 
 -- 댓글 복사
 insert into reply(moddate,regdate, reply_text,replyer,board_bno)
 select moddate, regdate, reply_text, replyer, board_bno from reply;
+
+delete from board_image where board_bno is null;
 

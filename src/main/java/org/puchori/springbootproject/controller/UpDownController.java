@@ -56,7 +56,7 @@ public class UpDownController {
           if(contentType != null && contentType.startsWith("image")){
             image = true;
 
-            File thumbFile = new File(uploadPath, "s_" + uuid + "-" + originalName);
+            File thumbFile = new File(uploadPath, "s_" + uuid + "_" + originalName);
 
             Thumbnailator.createThumbnail(savePath.toFile(), thumbFile, 200,200);
           }

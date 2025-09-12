@@ -5,10 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.puchori.springbootproject.domain.Board;
-import org.puchori.springbootproject.dto.BoardDTO;
-import org.puchori.springbootproject.dto.BoardListReplyCountDTO;
-import org.puchori.springbootproject.dto.PageRequestDTO;
-import org.puchori.springbootproject.dto.PageResponseDTO;
+import org.puchori.springbootproject.dto.*;
 import org.puchori.springbootproject.repository.BoardRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +29,8 @@ public class BoardServiceImpl implements BoardService{
   @Override
   public Long register(BoardDTO boardDTO) {
 
-    Board board = modelMapper.map(boardDTO, Board.class);
+    //Board board = modelMapper.map(boardDTO, Board.class);
+    Board board = dtoToEntity(boardDTO);
 
     Long bno = boardRepository.save(board).getBno();
 
@@ -43,11 +41,14 @@ public class BoardServiceImpl implements BoardService{
   @Override
   public BoardDTO readOne(Long bno) {
 
-    Optional<Board> result = boardRepository.findById(bno);
+    //Optional<Board> result = boardRepository.findById(bno);
+    //board_image까지 조인 처리되는 findByWithImages()를 이용
+    Optional<Board> result = boardRepository.findbyIdWithImages(bno);
 
     Board board = result.orElseThrow();
 
-    BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
+    //BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
+    BoardDTO boardDTO =  entityToDTO(board);
 
     return boardDTO;
 
@@ -61,6 +62,22 @@ public class BoardServiceImpl implements BoardService{
     Board board = result.orElseThrow();
 
     board.change(boardDTO.getTitle(), boardDTO.getContent());
+
+    //첨부파일의 처리
+    board.clearImages();
+
+    if(boardDTO.getFileNames() != null){
+      for(String fileName : boardDTO.getFileNames()) {
+
+
+        String[] arr = fileName.split("_",2);
+
+        String uuid = arr[0];
+        String realFileName = arr[1];
+
+        board.addImage(uuid, realFileName);
+      }
+    }
 
     boardRepository.save(board);
 
@@ -97,9 +114,6 @@ public class BoardServiceImpl implements BoardService{
    @Override
   public PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO) {
 
-
-
-
     String[] types = pageRequestDTO.getTypes();
     String keyword = pageRequestDTO.getKeyword();
     Pageable pageable = pageRequestDTO.getPageable("bno");
@@ -112,8 +126,22 @@ public class BoardServiceImpl implements BoardService{
             .total((int)result.getTotalElements())
             .build();
 
+  }
 
 
+  @Override
+  public PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO) {
 
+    String[] types = pageRequestDTO.getTypes();
+    String keyword = pageRequestDTO.getKeyword();
+    Pageable pageable = pageRequestDTO.getPageable("bno");
+
+    Page<BoardListAllDTO> result = boardRepository.searchWithAll(types,keyword,pageable);
+
+    return PageResponseDTO.<BoardListAllDTO>withAll()
+            .pageRequestDTO(pageRequestDTO)
+            .dtoList(result.getContent())
+            .total((int)result.getTotalElements())
+            .build();
   }
 }

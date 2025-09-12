@@ -83,7 +83,8 @@ ALTER DATABASE webdb CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 select * from board order by bno desc;
 
-select * from board_image order by uuid desc;
+
+select * from board_image order by board_bno desc;
 
 select * from board order by bno asc;
 
@@ -106,7 +107,7 @@ select * from board order by bno desc;
 
 select * from reply order by rno desc;
 
-select * from board_image order by board_bno;
+select * from board_image order by board_bno desc;
 
 
 -- 댓글 복사

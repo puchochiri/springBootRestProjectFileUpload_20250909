@@ -38,9 +38,21 @@
       <div class="card">
         <div class="card-header">
           Board List
+
         </div>
         <div class="card-body">
-          <h5 class="card-title">Board List</h5>
+                        <div class="input-group">
+                            <div class="d-flex align-items-center">
+                              <h3 class="card-title mb-0">Board List</h3>
+                            </div>
+
+                            <div class="ms-auto">
+                              <button class="btn btn-outline-secondary registerBtn" type="submit">Register</button>
+
+                            </div>
+
+                        </div>
+
 
           <table class="table">
             <thead>
@@ -137,6 +149,16 @@
 
   }
 
+  document.querySelector(".registerBtn").addEventListener("click", function (e){
+    e.preventDefault();
+    e.stopPropagation();
+
+    window.location.href = "/board/register";
+
+
+
+
+  });
 
 
 
